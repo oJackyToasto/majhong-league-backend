@@ -1,0 +1,8 @@
+{
+"players": [id:str],
+"scores": [score:int],
+"errors": [error:int],
+"if_short": bool,
+"pt": [pt:float],
+"time": int
+}
