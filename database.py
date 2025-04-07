@@ -4,7 +4,7 @@ MATCH_DB_ADDR = "databases/matches.db"
 PLAYERS_DB_ADDR = "databases/players.db"
 
 
-def init_db():
+def init_db():  # Initializes the database
     matches = sqlite3.connect(MATCH_DB_ADDR)
 
     cursor = matches.cursor()
@@ -30,7 +30,7 @@ def init_db():
         player_4_score INTEGER NOT NULL,
         player_4_pt REAL NOT NULL
     )
-''')
+''')  # database for 4 person majhong
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS matches_three (
             game_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,7 +48,7 @@ def init_db():
             player_3_score INTEGER NOT NULL,
             player_3_pt REAL NOT NULL,
         )
-    ''')
+    ''')  # database for 3 person majhong
     matches.commit()
     matches.close()
 
@@ -76,14 +76,14 @@ def init_db():
         third_ranked_games_t INTEGER DEFAULT 0,
         top_raw_score_t INTEGER DEFAULT 0
     )
-    ''')
+    ''')  # database for players
 
     players.commit()
     players.close()
 
 
 def add_game(match_type: bool, player_no: int, player_ids: [str], player_ranks: [int], player_scores: [int],
-             player_pt: [float]):
+             player_pt: [float]):  # Adds a game into the database
     if match_type:
         match_type = 1
     else:
@@ -93,16 +93,17 @@ def add_game(match_type: bool, player_no: int, player_ids: [str], player_ranks: 
     cursor = conn.cursor()
     if player_no == 4:
         cursor.execute("INSERT INTO matches_four (match_type, player_1, player_2, player_3, player_4, "
-                   "player_1_rank, player_2_rank, player_3_rank, player_4_rank, player_1_score, player_2_score, "
-                   "player_3_score, player_4_score, player_1_pt, player_2_pt, player_3_pt, player_4_pt) VALUES (?, "
-                   "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (match_type, player_ids[0],
-                                                                          player_ids[1], player_ids[2], player_ids[3],
-                                                                          player_ranks[0], player_ranks[1],
-                                                                          player_ranks[2], player_ranks[3],
-                                                                          player_scores[0], player_scores[1],
-                                                                          player_scores[2], player_scores[3],
-                                                                          player_pt[0], player_pt[1], player_pt[2],
-                                                                          player_pt[3]))
+                       "player_1_rank, player_2_rank, player_3_rank, player_4_rank, player_1_score, player_2_score, "
+                       "player_3_score, player_4_score, player_1_pt, player_2_pt, player_3_pt, player_4_pt) VALUES (?, "
+                       "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (match_type, player_ids[0],
+                                                                              player_ids[1], player_ids[2],
+                                                                              player_ids[3],
+                                                                              player_ranks[0], player_ranks[1],
+                                                                              player_ranks[2], player_ranks[3],
+                                                                              player_scores[0], player_scores[1],
+                                                                              player_scores[2], player_scores[3],
+                                                                              player_pt[0], player_pt[1], player_pt[2],
+                                                                              player_pt[3]))
     else:
         cursor.execute("INSERT INTO matches_three (match_type, player_1, player_2, player_3, "
                        "player_1_rank, player_2_rank, player_3_rank, player_1_score, player_2_score, "
@@ -117,12 +118,10 @@ def add_game(match_type: bool, player_no: int, player_ids: [str], player_ranks: 
     conn.commit()
     conn.close()
 
-
-
     update_players(player_ids)
 
 
-def add_player(player_id: str, player_name: str, player_rank: int = None):
+def add_player(player_id: str, player_name: str, player_rank: int = None):  # Adds a new player with no data
     if player_rank is None:
         player_rank = 2
 
@@ -142,21 +141,26 @@ def fetch_game():
     ...
 
 
-def fetch_player_by_id(player_id):
+def fetch_player_by_id(player_id):  # fetches a player's data
     conn = sqlite3.connect(PLAYERS_DB_ADDR)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM players WHERE player_id = ?", (player_id, ))
+    cursor.execute("SELECT * FROM players WHERE player_id = ?", (player_id,))
     player = cursor.fetchone()
     print(player)
     conn.commit()
     conn.close()
 
-def update_players(player_ids: [str]):
+
+def update_players(player_ids: [str]):  # updates all players passed in
     for player_id in player_ids:
         update_player(player_id)
 
-def update_player(player_id: str):
+    # TODO: add logic
+
+def update_player(player_id: str):  # updates the player
     ...
+
+
 if __name__ == '__main__':
     init_db()
     player_id = "aaa"
